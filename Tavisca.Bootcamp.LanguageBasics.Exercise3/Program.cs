@@ -115,6 +115,7 @@ namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
 
         public static List<int> updateCandidateIndices(int[] arr, List<int> c_index, int flag)
         {
+            
             int element = arr[c_index[0]];
 
             if(c_index.Count>0){
@@ -127,7 +128,10 @@ namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
                     for(int i =1;i<c_index.Count;i++)
                         if(element>arr[c_index[i]]) element = arr[c_index[i]];
                 }
+            }else{
+                return c_index;
             }
+            
 
             //updating the candidate_indices according to the occrance of element in nutrition_array
             List<int> temp = new List<int>();
