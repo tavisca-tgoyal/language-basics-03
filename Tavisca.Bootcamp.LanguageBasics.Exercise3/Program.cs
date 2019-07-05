@@ -110,7 +110,7 @@ namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
             }
 
 
-            throw new NotImplementedException();
+            
         }
 
         public static List<int> updateCandidateIndices(int[] arr, List<int> c_index, int flag)
