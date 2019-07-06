@@ -9,22 +9,22 @@ namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
         static void Main(string[] args)
         {
             Test(
-                new[] { 3, 4 }, 
-                new[] { 2, 8 }, 
-                new[] { 5, 2 }, 
-                new[] { "P", "p", "C", "c", "F", "f", "T", "t" }, 
+                new[] { 3, 4 },
+                new[] { 2, 8 },
+                new[] { 5, 2 },
+                new[] { "P", "p", "C", "c", "F", "f", "T", "t" },
                 new[] { 1, 0, 1, 0, 0, 1, 1, 0 });
             Test(
-                new[] { 3, 4, 1, 5 }, 
-                new[] { 2, 8, 5, 1 }, 
-                new[] { 5, 2, 4, 4 }, 
-                new[] { "tFc", "tF", "Ftc" }, 
+                new[] { 3, 4, 1, 5 },
+                new[] { 2, 8, 5, 1 },
+                new[] { 5, 2, 4, 4 },
+                new[] { "tFc", "tF", "Ftc" },
                 new[] { 3, 2, 0 });
             Test(
-                new[] { 18, 86, 76, 0, 34, 30, 95, 12, 21 }, 
-                new[] { 26, 56, 3, 45, 88, 0, 10, 27, 53 }, 
-                new[] { 93, 96, 13, 95, 98, 18, 59, 49, 86 }, 
-                new[] { "f", "Pt", "PT", "fT", "Cp", "C", "t", "", "cCp", "ttp", "PCFt", "P", "pCt", "cP", "Pc" }, 
+                new[] { 18, 86, 76, 0, 34, 30, 95, 12, 21 },
+                new[] { 26, 56, 3, 45, 88, 0, 10, 27, 53 },
+                new[] { 93, 96, 13, 95, 98, 18, 59, 49, 86 },
+                new[] { "f", "Pt", "PT", "fT", "Cp", "C", "t", "", "cCp", "ttp", "PCFt", "P", "pCt", "cP", "Pc" },
                 new[] { 2, 6, 6, 2, 4, 4, 5, 0, 5, 5, 6, 6, 3, 5, 6 });
             Console.ReadKey(true);
         }
@@ -41,26 +41,43 @@ namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
 
         public static int[] SelectMeals(int[] protein, int[] carbs, int[] fat, string[] dietPlans)
         {
-            
+
+            //validations
+            if (ValidateCount(protein) || ValidateCount(carbs) || ValidateCount(fat)) throw new System.Exception("size is not in desired range");
+
+            if (validateEqualityInSize(protein, carbs, fat)) throw new System.Exception("all arrays are not equal in length");
+
+            if (validateValuesRange(protein) || validateValuesRange(carbs) || validateValuesRange(fat)) throw new System.Exception("values of nutritions are not in desired range");
+
+            if (dietPlans.Length>50 || dietPlans.Length<0) throw new System.ArgumentOutOfRangeException("No. of diet plans should be 0 and 50 inclusive");
+
+            if (validateDietPlanString(dietPlans)) throw new System.Exception("dietPlans[] doesn't have all valid string");
+
+
             //array that will store the output indexes
             int[] output_index = new int[dietPlans.Length];
 
             //calculting the calorie array using the formula given
             int[] calories = new int[protein.Length];
-            for(int i=0; i<protein.Length; i++){
-                calories[i] = fat[i]*9 + carbs[i]*5 + protein[i]*5;
+            for (int i = 0; i < protein.Length; i++)
+            {
+                calories[i] = fat[i] * 9 + carbs[i] * 5 + protein[i] * 5;
             }
 
             //itrate through every dietPlan and add respective index to the output_index array
-            for(int i=0;i<dietPlans.Length; i++){
-                
+            for (int i = 0; i < dietPlans.Length; i++)
+            {
+
                 string local_diet_plan = dietPlans[i];
 
-                if(local_diet_plan.Length == 0){
+                if (local_diet_plan.Length == 0)
+                {
 
-                    output_index[i]=0;  
+                    output_index[i] = 0;
 
-                }else{
+                }
+                else
+                {
                     /*
                         key here is, we don't have to search for a max/min starting from index 0
                         but the indexes defined in an candidate_indices array.
@@ -68,15 +85,18 @@ namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
                      */
 
                     List<int> candidate_indices = new List<int>();
-                    for(int j=0;i<protein.Length;j++){
+                    for (int j = 0; i < protein.Length; j++)
+                    {
                         candidate_indices.Add(j);
                     }
 
-                    foreach(char ch in local_diet_plan){
-                        switch(ch){
-                                
+                    foreach (char ch in local_diet_plan)
+                    {
+                        switch (ch)
+                        {
+
                             case 'P':
-                                
+
                                 candidate_indices = updateCandidateIndices(protein, candidate_indices, 1);
                                 break;
                             case 'p':
@@ -110,33 +130,75 @@ namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
             }
 
 
-            
+
+        }
+
+        private static bool validateDietPlanString(string[] dietPlans)
+        {
+            string[] myStrings = { "c", "p", "f", "t" };
+            foreach(string dietPlan in dietPlans)
+            {
+                if (myStrings.Any(dietPlan.ToLowerInvariant().Contains))  //if i rearrange the myStrings contains, will it contain the string dietPlan
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private static bool validateValuesRange(int[] arr)
+        {
+            foreach(int value in arr)
+            {
+                if (value > 100 || value < 0) return true;
+            }
+            return false;
+        }
+
+        private static bool validateEqualityInSize(int[] protein, int[] carbs, int[] fat)
+        {
+            if (protein.Length != carbs.Length && carbs.Length != fat.Length) return true;
+            else return false;
+        }
+
+        private static bool ValidateCount(int[] nutriArray)
+        {
+            if (nutriArray.Length > 50 || nutriArray.Length < 1) return true;
+            else return false;
         }
 
         public static List<int> updateCandidateIndices(int[] arr, List<int> c_index, int flag)
         {
-            
+
             int element = arr[c_index[0]];
 
-            if(c_index.Count>0){
-                if(flag == 1){
+            if (c_index.Count > 0)
+            {
+                if (flag == 1)
+                {
                     //adding maximum value to element
-                    for(int i =1;i<c_index.Count;i++)
-                        if(element<arr[c_index[i]]) element = arr[c_index[i]];                          
-                }else{
-                    //adding minimum value to element
-                    for(int i =1;i<c_index.Count;i++)
-                        if(element>arr[c_index[i]]) element = arr[c_index[i]];
+                    for (int i = 1; i < c_index.Count; i++)
+                        if (element < arr[c_index[i]]) element = arr[c_index[i]];
                 }
-            }else{
+                else
+                {
+                    //adding minimum value to element
+                    for (int i = 1; i < c_index.Count; i++)
+                        if (element > arr[c_index[i]]) element = arr[c_index[i]];
+                }
+            }
+            else
+            {
                 return c_index;
             }
-            
+
 
             //updating the candidate_indices according to the occrance of element in nutrition_array
             List<int> temp = new List<int>();
-            foreach(int i in c_index){
-                if(arr[i]==element) temp.Add(i);
+            foreach (int i in c_index)
+            {
+                if (arr[i] == element) temp.Add(i);
             }
 
             return temp;
